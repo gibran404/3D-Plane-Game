@@ -121,4 +121,22 @@ public class PlayerController : MonoBehaviour
         Quaternion targetRot = Quaternion.Euler(0, 0, currentTilt);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * tiltSmooth);
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.CompareTag("Terrain") || other.collider.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit terrain!");
+            GameController.Instance.Crash();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Obstacle") || other.CompareTag("Terrain"))
+        {
+            Debug.Log("Hit obstacle!");
+            GameController.Instance.Crash();
+        }
+    }
 }
