@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "3d Plane Game.sln"
+    "dotnet.defaultSolution": "3D-Plane-Game.sln"
 }

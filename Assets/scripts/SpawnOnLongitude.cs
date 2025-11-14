@@ -5,12 +5,21 @@ public class SpawnOnLongitude : MonoBehaviour
 {
     [Header("Sphere Settings")]
     public Transform sphere; // assign your sphere here
+    [Tooltip("Use individual axis radii for ellipsoid support. If all zero, will auto-detect from sphere scale.")]
+    public Vector3 ellipsoidRadii = Vector3.zero; // X, Y, Z radii
+    [Tooltip("Legacy single radius - only used if ellipsoidRadii is zero")]
     public float sphereRadius = 50f;
 
     [Header("Spawn Settings")]
     public GameObject prefab; // assign cube prefab here
     public int count = 20;
     public float xVariance = 0f;
+
+    [Header("Center Strip Exclusion")]
+    [Tooltip("If enabled, leaves a blank strip at the center (x=0 plane)")]
+    public bool excludeCenterStrip = false;
+    [Tooltip("Width of the center strip to exclude from spawning")]
+    public float centerStripWidth = 5f;
 
     [Header("Editor Controls")]
     public bool generate = false;
@@ -60,9 +69,19 @@ public class SpawnOnLongitude : MonoBehaviour
 
         ClearObjects();
 
-        // Auto-detect radius if not set
-        if (sphereRadius <= 0f)
-            sphereRadius = sphere.localScale.x * 0.5f;
+        // Auto-detect radii if not set
+        Vector3 radii = ellipsoidRadii;
+        if (radii == Vector3.zero)
+        {
+            // Try to use the sphere's scale to determine radii
+            radii = sphere.localScale * 0.5f;
+            
+            // Fallback to legacy sphereRadius if scale is not useful
+            if (radii.magnitude <= 0f && sphereRadius > 0f)
+            {
+                radii = Vector3.one * sphereRadius;
+            }
+        }
 
         // Evenly distribute objects around the full 360° circle
         float spacingDegrees = 360f / count;
@@ -74,9 +93,42 @@ public class SpawnOnLongitude : MonoBehaviour
 
             // Longitudinal placement (vertical ring around sphere) with x variance
             Vector3 basePos = new Vector3(0, Mathf.Sin(radians), Mathf.Cos(radians));
-            Vector3 offset = new Vector3(Random.Range(-xVariance, xVariance), 0, 0);
+            
+            // Apply x variance, but avoid center strip if enabled
+            float xOffset;
+            if (excludeCenterStrip && xVariance > 0f)
+            {
+                // Generate random value outside the center strip
+                float halfStrip = centerStripWidth * 0.5f;
+                float availableRange = xVariance - halfStrip;
+                
+                if (availableRange > 0f)
+                {
+                    // Randomly choose left or right side
+                    float randomVal = Random.Range(0f, availableRange);
+                    xOffset = Random.value > 0.5f ? (halfStrip + randomVal) : -(halfStrip + randomVal);
+                }
+                else
+                {
+                    // If strip is wider than variance, just use the edges
+                    xOffset = Random.value > 0.5f ? halfStrip : -halfStrip;
+                }
+            }
+            else
+            {
+                xOffset = Random.Range(-xVariance, xVariance);
+            }
+            
+            Vector3 offset = new Vector3(xOffset, 0, 0);
             Vector3 combined = basePos + offset;
-            Vector3 localPos = combined.normalized * sphereRadius;
+            
+            // Normalize and then scale by ellipsoid radii instead of uniform sphere radius
+            Vector3 normalized = combined.normalized;
+            Vector3 localPos = new Vector3(
+                normalized.x * radii.x,
+                normalized.y * radii.y,
+                normalized.z * radii.z
+            );
             Vector3 worldPos = sphere.position + localPos;
 
 #if UNITY_EDITOR
