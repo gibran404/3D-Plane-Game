@@ -13,11 +13,14 @@ public class ItemSpawner : MonoBehaviour
 
     // Ensure we only spawn once unless explicitly allowed
     private bool hasSpawned = false;
+    // Keep reference to the last spawned instance so it can be destroyed when respawning
+    private GameObject lastSpawned = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        randomSpawn();
+        randomSpawn(false);
+        // No automatic spawn on Start — spawning happens when entering a collider tagged "spawner".
     }
 
     // Update is called once per frame
@@ -29,16 +32,18 @@ public class ItemSpawner : MonoBehaviour
     /// <summary>
     /// Picks a random prefab from the `prefabs` array and instantiates it as a child of this plate.
     /// If the array is empty or null, nothing is spawned.
+    /// If `force` is true, any previously spawned instance is destroyed and a new one is created.
+    /// Returns the spawned GameObject or null if nothing was spawned.
     /// </summary>
-    public void randomSpawn()
+    public GameObject randomSpawn(bool force = false)
     {
-        if (hasSpawned)
-            return;
+        if (hasSpawned && !force && lastSpawned != null)
+            return lastSpawned;
 
         if (prefabs == null || prefabs.Length == 0)
         {
             Debug.LogWarning("ItemSpawner: no prefabs assigned to spawn.");
-            return;
+            return null;
         }
 
         int idx = Random.Range(0, prefabs.Length);
@@ -47,19 +52,54 @@ public class ItemSpawner : MonoBehaviour
         if (prefab == null)
         {
             Debug.LogWarning($"ItemSpawner: selected prefab at index {idx} is null.");
-            return;
+            return null;
         }
 
         // Calculate spawn position and rotation. Spawn as child so it follows the plate if it moves.
         Vector3 worldPos = transform.TransformPoint(spawnLocalOffset);
         Quaternion worldRot = transform.rotation;
 
+        // If forcing a respawn, destroy previous instance first
+        if (force && lastSpawned != null)
+        {
+            Destroy(lastSpawned);
+            lastSpawned = null;
+            hasSpawned = false;
+        }
+
         GameObject instance = Instantiate(prefab, worldPos, worldRot, this.transform);
 
-        // Optional: reset local position/rotation if prefab has its own pivoting we want preserved relative to plate
+        // Reset local position/rotation so the item sits correctly relative to the plate
         instance.transform.localPosition = spawnLocalOffset;
         instance.transform.localRotation = Quaternion.identity;
 
+        lastSpawned = instance;
         hasSpawned = true;
+
+        return instance;
+    }
+
+    // When this GameObject enters a trigger collider tagged "spawner", spawn (or respawn) the item.
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other == null)
+            return;
+
+        if (!other.CompareTag("spawner"))
+            return;
+
+        randomSpawn(true);
+    }
+
+    // Also handle non-trigger colliders (in case the spawner uses a regular collider)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null || collision.collider == null)
+            return;
+
+        if (!collision.collider.CompareTag("spawner"))
+            return;
+
+        randomSpawn(true);
     }
 }

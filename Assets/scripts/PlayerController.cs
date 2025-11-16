@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     [Header("Tilt Settings")]
     public float maxTiltAngle = 25f;     // how much the helicopter rolls on drag
     public float tiltSmooth = 6f;
+    public float maxPitchAngle = 20f;    // how much the helicopter pitches on vertical movement
+    public float pitchSmooth = 6f;
 
     [Header("Auto Stabilize")]
     public float stabilizeSpeed = 4f;
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool dragging = false;
     private Vector3 targetPos;
     private float currentTilt = 0f;
+    private float currentPitch = 0f;
 
     void Start()
     {
@@ -93,6 +96,8 @@ public class PlayerController : MonoBehaviour
 
             // Set tilt based on horizontal drag
             currentTilt = Mathf.Lerp(currentTilt, -delta.x * (maxTiltAngle / 200f), 0.3f);
+            // Set pitch based on vertical drag (go up -> tilt back, go down -> tilt forward)
+            currentPitch = Mathf.Lerp(currentPitch, -delta.y * (maxPitchAngle / 200f), 0.3f);
         }
     }
 
@@ -110,6 +115,8 @@ public class PlayerController : MonoBehaviour
 
             // Tilt returns to 0
             currentTilt = Mathf.Lerp(currentTilt, 0, Time.deltaTime * stabilizeSpeed);
+            // Pitch also returns to neutral when not dragging
+            currentPitch = Mathf.Lerp(currentPitch, 0, Time.deltaTime * stabilizeSpeed);
         }
 
         // Smooth movement to target
@@ -118,8 +125,10 @@ public class PlayerController : MonoBehaviour
 
     void ApplyTilt()
     {
-        Quaternion targetRot = Quaternion.Euler(0, 0, currentTilt);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * tiltSmooth);
+        // Apply pitch (x) and roll (z)
+        Quaternion targetRot = Quaternion.Euler(currentPitch, 0, currentTilt);
+        // Smooth pitch and roll interpolation
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * Mathf.Max(tiltSmooth, pitchSmooth));
     }
 
     void OnCollisionEnter(Collision other)

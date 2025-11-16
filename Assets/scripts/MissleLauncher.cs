@@ -32,6 +32,7 @@ public class MissleLauncher : MonoBehaviour
         {
             playerInRange = false;
             playerTransform = null;
+            activeMissles.Clear();
             if (spawnRoutine != null)
             {
                 StopCoroutine(spawnRoutine);

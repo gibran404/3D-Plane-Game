@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5268488036675673232}
   m_Layer: 0
   m_Name: hut
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.45312932, y: 0.45414376, z: -0.51737523}
-  m_LocalScale: {x: 1, y: 0.001, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 5, y: 0.0050000004, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 35925476571116404}
   m_Father: {fileID: 0}
@@ -189,10 +189,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hut
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 56def5c9fb7b56e4696821cac675ce3e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 56def5c9fb7b56e4696821cac675ce3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1544533947609431766}
   m_SourcePrefab: {fileID: 100100000, guid: 56def5c9fb7b56e4696821cac675ce3e, type: 3}
 --- !u!4 &35925476571116404 stripped
 Transform:
@@ -200,3 +209,31 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 573394741242434719}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &807396313310702030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 56def5c9fb7b56e4696821cac675ce3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 573394741242434719}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1544533947609431766
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807396313310702030}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -908298366693926071, guid: 56def5c9fb7b56e4696821cac675ce3e, type: 3}
