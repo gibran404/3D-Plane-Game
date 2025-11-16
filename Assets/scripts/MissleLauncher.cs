@@ -44,6 +44,12 @@ public class MissleLauncher : MonoBehaviour
     {
         while (playerInRange && playerTransform != null)
         {
+            // if max missles count is reached, stop the spawn loop
+            if (maxMissles > 0 && activeMissles.Count >= maxMissles)
+            {
+                break;
+            }
+
             // prune dead entries
             activeMissles.RemoveAll(x => x == null);
 
@@ -55,6 +61,8 @@ public class MissleLauncher : MonoBehaviour
             }
 
             SpawnMissleAbovePlayer();
+
+
             yield return new WaitForSeconds(Mathf.Max(0.01f, spawnInterval));
         }
         spawnRoutine = null;

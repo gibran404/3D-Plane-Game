@@ -5,23 +5,34 @@ public class Missle : MonoBehaviour
 {
     [Header("Ascent")]
     [Tooltip("How far above the spawn Y the missile will climb before homing")]
-    [SerializeField] private float riseHeight = 6f;
+    [SerializeField]
+    private float riseHeight = 6f;
+
     [Tooltip("Vertical speed while rising (units/sec)")]
-    [SerializeField] private float riseSpeed = 8f;
+    [SerializeField]
+    private float riseSpeed = 8f;
 
     [Header("Homing")]
     [Tooltip("Turn speed in degrees/sec when homing toward target")]
-    [SerializeField] private float turnSpeed = 90f;
+    [SerializeField]
+    private float turnSpeed = 90f;
+
     [Tooltip("Forward flight speed while homing (units/sec)")]
-    [SerializeField] private float flySpeed = 20f;
+    [SerializeField]
+    private float flySpeed = 20f;
 
     [Header("Detonation")]
-    [Tooltip("World Z coordinate at which the missile will detonate (use negative value, e.g. -10)")]
-    [SerializeField] private float detonationZ = -10f;
+    [Tooltip(
+        "World Z coordinate at which the missile will detonate (use negative value, e.g. -10)"
+    )]
+    [SerializeField]
+    private float detonationZ = -10f;
 
     private Transform target = null;
     private float startY = 0f;
     private bool ascending = true;
+    public GameObject destroy_effect;
+
 
     public void Initialize(Transform targetTransform)
     {
@@ -45,7 +56,10 @@ public class Missle : MonoBehaviour
             float newY = Mathf.MoveTowards(pos.y, targetY, riseSpeed * Time.deltaTime);
             transform.position = new Vector3(pos.x, newY, pos.z);
 
-            if (Mathf.Approximately(transform.position.y, targetY) || transform.position.y >= targetY)
+            if (
+                Mathf.Approximately(transform.position.y, targetY)
+                || transform.position.y >= targetY
+            )
             {
                 ascending = false;
             }
@@ -59,7 +73,12 @@ public class Missle : MonoBehaviour
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             // Smoothly rotate the missile's "up" vector toward the target direction.
             // Missile prefab should be modeled with its long axis aligned to local up (Y).
-            Vector3 newUp = Vector3.RotateTowards(transform.up, dirToTarget, Mathf.Deg2Rad * turnSpeed * Time.deltaTime, 0f);
+            Vector3 newUp = Vector3.RotateTowards(
+                transform.up,
+                dirToTarget,
+                Mathf.Deg2Rad * turnSpeed * Time.deltaTime,
+                0f
+            );
             transform.up = newUp;
             forwardDir = transform.up;
         }
@@ -80,8 +99,22 @@ public class Missle : MonoBehaviour
 
     private void Detonate()
     {
+        if (destroy_effect != null)
+        {
+            Instantiate(destroy_effect, transform.position, transform.rotation);
+        }
         // TODO: play VFX, deal damage, etc. For now just destroy
         Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Detonate();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Detonate();
     }
 
     private void OnDrawGizmosSelected()
