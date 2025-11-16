@@ -180,11 +180,29 @@ public class Missle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // If hit by an object tagged "bullet", award score
+        if (collision != null && collision.gameObject != null && collision.gameObject.CompareTag("bullet"))
+        {
+            if (GameController.Instance != null)
+            {
+                GameController.Instance.AddScore(100f);
+            }
+        }
+
         Detonate();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // If triggered by an object tagged "bullet", award score
+        if (other != null && other.gameObject != null && other.gameObject.CompareTag("bullet"))
+        {
+            if (GameController.Instance != null)
+            {
+                GameController.Instance.AddScore(100f);
+            }
+        }
+
         Detonate();
     }
 

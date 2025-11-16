@@ -72,4 +72,14 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    // Add score from external events (e.g., hitting an enemy)
+    public void AddScore(float amount)
+    {
+        score += amount;
+        if (scoreText != null)
+        {
+            scoreText.text = Mathf.FloorToInt(score).ToString();
+        }
+    }
 }

@@ -8,6 +8,9 @@ TagManager:
   - Spawner
   - Terrain
   - Obstacle
+  - homing_missile
+  - Bullet
+  - bullet
   layers:
   - Default
   - TransparentFX
