@@ -8,6 +8,15 @@ public class BombLauncher : MonoBehaviour
     public GameObject bombPrefab;
     public float bombSpeed = 20f;
 
+// if space button pressed, launch bomb
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            LaunchBomb();
+        }
+    }
+
     public void LaunchBomb()
     {
         if (bombPrefab == null) return;

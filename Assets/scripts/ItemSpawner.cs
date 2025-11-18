@@ -85,9 +85,9 @@ public class ItemSpawner : MonoBehaviour
         if (other == null)
             return;
 
-        if (!other.CompareTag("spawner"))
+        if (!other.CompareTag("Spawner"))
             return;
-
+        Debug.Log("ItemSpawner: spawned item on Trigger with spawner.");
         randomSpawn(true);
     }
 
@@ -96,10 +96,10 @@ public class ItemSpawner : MonoBehaviour
     {
         if (collision == null || collision.collider == null)
             return;
-
-        if (!collision.collider.CompareTag("spawner"))
+        
+        if (!collision.collider.CompareTag("Spawner"))
             return;
-
+        Debug.Log("ItemSpawner: spawned item on Trigger with spawner.");
         randomSpawn(true);
     }
 }

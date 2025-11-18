@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     public GameObject gameOverPanel;
 
     [Header("Scoring")]
-    public float scoreMultiplier = 1f; // score per second or per unit distance
+    public float scoreMultiplier = 0.1f; // score per second or per unit distance
     private float score;
 
     [Header("State")]
@@ -49,7 +49,7 @@ public class GameController : MonoBehaviour
 
     void UpdateScore()
     {
-        float distance = Time.deltaTime * 10;
+        float distance = Time.deltaTime * 1;
         score += distance * scoreMultiplier;
         scoreText.text = Mathf.FloorToInt(score).ToString();
     }

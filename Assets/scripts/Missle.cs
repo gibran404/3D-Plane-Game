@@ -188,6 +188,9 @@ public class Missle : MonoBehaviour
                 GameController.Instance.AddScore(100f);
             }
         }
+        if (collision.gameObject.name.Contains("truck") || collision.gameObject.name.Contains("missle"))
+            return;
+        Debug.Log("Missle: OnCollisionEnter with " + collision.gameObject.name);
 
         Detonate();
     }
@@ -202,6 +205,9 @@ public class Missle : MonoBehaviour
                 GameController.Instance.AddScore(100f);
             }
         }
+        if (other.gameObject.name.Contains("truck") || other.gameObject.name.Contains("missle"))
+            return;
+        Debug.Log("Missle: OnTriggerEnter with " + other.gameObject.name);
 
         Detonate();
     }

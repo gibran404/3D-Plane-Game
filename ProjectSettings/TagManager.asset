@@ -11,6 +11,7 @@ TagManager:
   - homing_missile
   - Bullet
   - bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX

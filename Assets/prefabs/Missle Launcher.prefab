@@ -70,7 +70,7 @@ MonoBehaviour:
   misslePrefab: {fileID: 7022656711315830271, guid: 753448c9039b76647b853756f5c3036d,
     type: 3}
   spawnInterval: 2
-  spawnHeightOffset: 1
+  spawnHeightOffset: 3
   maxMissles: 2
 --- !u!1001 &3018183527965911132
 PrefabInstance:

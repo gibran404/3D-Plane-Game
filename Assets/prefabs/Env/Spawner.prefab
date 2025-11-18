@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7874852915835447561}
   - component: {fileID: 3699016290650567470}
+  - component: {fileID: 1889322923640954351}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -133,3 +134,24 @@ MonoBehaviour:
   - {fileID: 8899366526889641595, guid: 029c665eb41e79e439f19f78162490bc, type: 3}
   - {fileID: 1524852382168942569, guid: a30c0ec251b8c174791f29a8ed3e82ce, type: 3}
   spawnLocalOffset: {x: 0, y: 0.5, z: 0}
+--- !u!65 &1889322923640954351
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959171590513728097}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
