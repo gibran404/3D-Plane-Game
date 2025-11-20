@@ -23,6 +23,9 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private PlayerController playerController;
 
+    [SerializeField]
+    private FloatingTextSpawner popup;
+
     void Awake()
     {
         Instance = this;
@@ -73,6 +76,13 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+        public void LeaveGame()
+    {
+        Time.timeScale = 1f;
+        // open the first scene
+        SceneManager.LoadScene(0);
+    }
+
     // Add score from external events (e.g., hitting an enemy)
     public void AddScore(float amount)
     {
@@ -81,5 +91,6 @@ public class GameController : MonoBehaviour
         {
             scoreText.text = Mathf.FloorToInt(score).ToString();
         }
+        popup?.SpawnFloatingText("+" + amount);
     }
 }

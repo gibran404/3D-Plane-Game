@@ -7,6 +7,9 @@ public class BombLauncher : MonoBehaviour
     [Header("Projectile")]
     public GameObject bombPrefab;
     public float bombSpeed = 20f;
+    [Header("Rate Limit")]
+    private float launchCooldown = 0.5f; // seconds between launches
+    private float nextLaunchTime = 0f;
 
 // if space button pressed, launch bomb
     void Update()
@@ -20,6 +23,9 @@ public class BombLauncher : MonoBehaviour
     public void LaunchBomb()
     {
         if (bombPrefab == null) return;
+
+        if (Time.time < nextLaunchTime) return; // still in cooldown
+        nextLaunchTime = Time.time + launchCooldown;
 
         GameObject b = Instantiate(bombPrefab, transform.position, transform.rotation);
         EnsureBombComponents(b);
