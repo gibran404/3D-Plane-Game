@@ -138,6 +138,12 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Hit terrain!");
             GameController.Instance.Crash();
         }
+
+        if (other.collider.CompareTag("Ring"))
+        {
+            //Add score by 300
+            GameController.Instance.AddScore(300);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -146,6 +152,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Hit obstacle!");
             GameController.Instance.Crash();
+        }
+
+        if (other.CompareTag("Ring"))
+        {
+            //Add score by 300
+            GameController.Instance.AddScore(300);
         }
     }
 }

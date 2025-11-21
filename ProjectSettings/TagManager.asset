@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - bullet
   - Enemy
+  - Ring
   layers:
   - Default
   - TransparentFX
