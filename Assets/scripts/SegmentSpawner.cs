@@ -13,7 +13,9 @@ public class SegmentSpawner : MonoBehaviour
     public int startCount = 3;              // Number of loopable segments
     public float recycleZ = -50f;           // Z at which segments recycle
 
-    private Queue<GameObject> pool = new Queue<GameObject>();
+    // Use a fixed-size circular list to avoid allocations from Queue enumeration
+    private List<GameObject> pool = new List<GameObject>();
+    private int headIndex = 0; // index of the first (oldest) segment
 
     void Start()
     {
@@ -30,7 +32,7 @@ public class SegmentSpawner : MonoBehaviour
                 Quaternion.identity,
                 segmentsParent);
 
-            pool.Enqueue(seg);
+            pool.Add(seg);
 
             spawnZ += segmentLength;
         }
@@ -45,30 +47,21 @@ public class SegmentSpawner : MonoBehaviour
     {
         if (pool.Count == 0) return;
 
-        GameObject first = pool.Peek();
+        GameObject first = pool[headIndex];
 
         if (first.transform.position.z < recycleZ)
         {
-            pool.Dequeue();
+            // Find last index in the circular buffer
+            int lastIndex = (headIndex + pool.Count - 1) % pool.Count;
+            GameObject last = pool[lastIndex];
 
-            // Find the last segment in queue
-            GameObject last = null;
-            foreach (var s in pool) last = s;
+            float newZ = last.transform.position.z + segmentLength;
 
-            float newZ;
-            if (last == null)
-            {
-                // Rare case: only one segment
-                newZ = first.transform.position.z + segmentLength * pool.Count;
-            }
-            else
-            {
-                newZ = last.transform.position.z + segmentLength;
-            }
-
+            // Reposition the first segment to the end
             first.transform.position = new Vector3(0, 0, newZ);
 
-            pool.Enqueue(first);
+            // Advance head index (circular)
+            headIndex = (headIndex + 1) % pool.Count;
         }
     }
 }
